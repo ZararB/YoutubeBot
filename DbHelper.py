@@ -55,6 +55,6 @@ class DbHelper(object):
             row = self.conn.execute("select * from meme_vids where id = ?;", ((id, )))
             clip = row.fetchone()
             if clip != None:
-                clip_locations.append(clip[2]+str(clip[1])+".mp4")
+                clip_locations.append(clip[2]+"/"+str(clip[1])+".mp4")
 
         return clip_locations
