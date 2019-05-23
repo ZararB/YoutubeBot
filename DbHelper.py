@@ -5,12 +5,11 @@ class DbHelper(object):
 
     def __init__(self, db_dir):
         """ Creates memes database with meme_vids table with columns (
-            id, shortcode, media_id, file_location, length, likes, owner_id, owner_follower_count
+            id, media_id, file_location, length, likes, owner_id, owner_follower_count
             )
             """
         CREATE_TABLES_SQL = '''CREATE TABLE IF NOT EXISTS meme_vids (
             id integer primary key,
-            shortcode text, 
             media_id integer, 
             file_location text, 
             length integer, 
@@ -26,16 +25,15 @@ class DbHelper(object):
     def insert_post(self, post, target):
 
         
-        shortcode = post.shortcode
         media_id = post.mediaid
-        file_location = target
+        file_location = 'data/meme_vids/' + str(target)
         length = post.video_duration
         num_likes = post.likes
         owner_id = post.owner_id
         owner_follower_count = post.owner_profile.followers
 
-        insert_post_sql = '''insert into meme_vids(shortcode, media_id, file_location, length, num_likes,
-        owner_id, owner_follower_count) values(?,?,?,?,?,?,?) '''
+        insert_post_sql = '''insert into meme_vids(media_id, file_location, length, num_likes,
+        owner_id, owner_follower_count) values(?,?,?,?,?,?) '''
         cursor = self.conn.cursor()
-        cursor.execute(insert_post_sql, (shortcode, media_id, file_location, length, num_likes, owner_id, owner_follower_count))
+        cursor.execute(insert_post_sql, (media_id, file_location, length, num_likes, owner_id, owner_follower_count))
         self.conn.commit()
