@@ -1,5 +1,10 @@
 import sqlite3 as sql 
 from instaloader import Post
+import numpy as np 
+import random
+
+
+
 class DbHelper(object):
 
 
@@ -24,7 +29,6 @@ class DbHelper(object):
 
     def insert_post(self, post, target):
 
-        
         media_id = post.mediaid
         file_location = 'data/meme_vids/' + str(target)
         length = post.video_duration
@@ -37,3 +41,20 @@ class DbHelper(object):
         cursor = self.conn.cursor()
         cursor.execute(insert_post_sql, (media_id, file_location, length, num_likes, owner_id, owner_follower_count))
         self.conn.commit()
+        
+
+    def get_random_clips(self, num_clips):
+            
+        # An array with the dir of random clips 
+        clip_locations = []
+        cursor = self.conn.execute("select count(*) from meme_vids")
+        total_count = cursor.fetchone()[0]
+        clip_ids = random.sample(range(total_count), num_clips)
+
+        for id in clip_ids:
+            row = self.conn.execute("select * from meme_vids where id = ?;", ((id, )))
+            clip = row.fetchone()
+            if clip != None:
+                clip_locations.append(clip[2]+str(clip[1])+".mp4")
+
+        return clip_locations

@@ -7,7 +7,8 @@ import os
 class InstaHelper(object):
 
     def __init__(self):
-        self.ldr = instaloader.Instaloader(download_pictures=False, download_geotags=False, download_comments=False, save_metadata=False)
+        self.ldr = instaloader.Instaloader(filename_pattern="{target}",
+        download_pictures=False, download_geotags=False, download_comments=False, save_metadata=False)
         self.dbh = DbHelper.DbHelper('data/databases/memes.db')
 
     def download_profile(self, profile_name):
