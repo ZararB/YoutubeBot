@@ -3,7 +3,7 @@ import videoNoob
 import instaHelper 
 
 iHelper = instaHelper.InstaHelper()
-iHelper.download_profile("failsvids")
+#iHelper.download_profile("failsvids")
 
 
 vNoob = videoNoob.VideoNoob()

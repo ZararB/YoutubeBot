@@ -21,8 +21,35 @@ class DbHelper(object):
             num_likes integer, 
             owner_id integer, 
             owner_follower_count integer);
-            '''
 
+            CREATE TABLE IF NOT EXSITS fails(
+                id integer primary key, 
+                media_id integer
+            );
+
+            CREATE TABLE IF NOT EXISTS animals(
+                id integer primary key, 
+                media_id integer
+            );
+            CREATE TABLE IF NOT EXISTS female(
+                id integer primary key, 
+                media_id integer
+            );
+
+            CREATE TABLE IF NOT EXISTS drunk(
+                id integer primary key, 
+                media_id integer
+            );
+            CREATE TABLE IF NOT EXISTS exotic(
+                id integer primary key, 
+                media_id integer
+            );
+            CREATE TABLE IF NOT EXISTS cars(
+                id integer primary key, 
+                media_id integer
+            );
+            '''
+            
         self.conn = sql.connect(db_dir)
         cursor = self.conn.cursor()
         cursor.execute(CREATE_TABLES_SQL)

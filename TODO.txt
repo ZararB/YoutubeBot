@@ -4,6 +4,8 @@ Gather Data:
 
 - Download all the fails clips from atleast 3     instagram profiles
 
+
+
 Create Videos:
 
 - Create a video of a specific duration using the downloaded clips
@@ -11,4 +13,6 @@ Create Videos:
 Upload Videos:
 
 - Upload the video to youtube
+
+
 
