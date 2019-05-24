@@ -1,11 +1,7 @@
 import instaloader
 import videoNoob 
 import instaHelper 
+import youtubeHelper 
 
-iHelper = instaHelper.InstaHelper()
-#iHelper.download_profile("failsvids")
-
-
-vNoob = videoNoob.VideoNoob()
-
-vNoob.create_video(3)
+yHelper = youtubeHelper.YoutubeHeper()
+youtube = yHelper.get_authenticated_service()
