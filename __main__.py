@@ -1,7 +1,8 @@
 import instaloader
 import videoNoob 
 import instaHelper 
-import youtubeHelper 
+import recordNoob 
 
-yHelper = youtubeHelper.YoutubeHeper()
-youtube = yHelper.get_authenticated_service()
+
+rNoob = recordNoob.RecordNoob()
+rNoob.record_game()

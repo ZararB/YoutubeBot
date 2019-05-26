@@ -22,7 +22,7 @@ class DbHelper(object):
             owner_id integer, 
             owner_follower_count integer);
 
-            CREATE TABLE IF NOT EXSITS fails(
+            CREATE TABLE IF NOT EXISTS fails(
                 id integer primary key, 
                 media_id integer
             );
@@ -52,7 +52,7 @@ class DbHelper(object):
             
         self.conn = sql.connect(db_dir)
         cursor = self.conn.cursor()
-        cursor.execute(CREATE_TABLES_SQL)
+        cursor.executescript(CREATE_TABLES_SQL)
 
     def insert_post(self, post, target):
 
