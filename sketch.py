@@ -1,7 +1,9 @@
 import DbHelper
 import sqlite3 as sql
+import videoNoob 
 
-dbh = DbHelper.DbHelper("data/databases/memes.db")
+import subprocess
+from subprocess import PIPE, STDOUT
 
-locations = dbh.get_random_clips()
-print(locations)
+
+out = subprocess.run(['ffprobe', '-v', 'quiet', '-print_format', 'json', '-show_format', '-show_streams', file_location])

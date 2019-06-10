@@ -1,27 +1,24 @@
-
-
-Gather Data:
-
-- Download all the fails clips from atleast 3     instagram profiles
-
-
-
-Create Videos:
-
-- Create a video of a specific duration using the downloaded clips
-
-
-
-Upload Videos:
-
-- Upload the video to youtube
-
-
-
-
 Objectives:
 
-- Create GUI that allows me to efficiently classify the clips that I download
-- Write upload_video function in youtubeHelper class
+- Create a games database 
+    (id, home_team, away_team, time, file_location)
+- Write a script that records live sports games
 
+
+
+- Create a videos database
+    (id, url, title, description, owner, owner_subs, views, likes, dislikes, num_comments, comments)
+
+- Write an algorithm that takes as input entire videos and
+    splits it into the individual clips that comprise it
+
+
+
+ 
+
+
+
+
+- Work on YoutubeHelper after I am able to create quality
+    content. 
 

@@ -15,7 +15,7 @@ class InstaHelper(object):
 
         prof = Profile.from_username(self.ldr.context, profile_name)
         posts = prof.get_posts()
-        os.chdir('data/meme_vids')
+        os.chdir('data/meme_clips')
         for post in posts:
             target = post.mediaid
             if post.is_video & self.ldr.download_post(post, target):

@@ -2,7 +2,9 @@ import instaloader
 import videoNoob 
 import instaHelper 
 import recordNoob 
+import DbHelper
 
 
-rNoob = recordNoob.RecordNoob()
-rNoob.record_game()
+iHelper = instaHelper.InstaHelper()
+iHelper.download_profile("failsvids")
+
