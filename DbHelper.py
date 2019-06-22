@@ -1,58 +1,72 @@
 import sqlite3 as sql 
+import instaloader
 from instaloader import Post
 import numpy as np 
 import random
+import cv2
 import subprocess
 from subprocess import PIPE, STDOUT
+from moviepy.editor import VideoFileClip
 
 
 class DbHelper(object):
 
+    
 
     def __init__(self, db_dir):
         
 
-        CREATE_TABLES_SQL = '''CREATE TABLE IF NOT EXISTS meme_clips (
+        CREATE_TABLES_SQL = ''' CREATE TABLE IF NOT EXISTS instagram_clips(
             id integer primary key,
-            source text,
-            ref_id integer default -1,
-            file_location text default "" , 
-            length integer default -1, 
-            width integer default -1,
-            height integer default -1
-            );'''
+            media_id integer, 
+            file_location string,
+            duration integer, 
+            width integer,
+            height integer
+        );
+        '''
+        
             # Additional tables to add later
 
         self.conn = sql.connect(db_dir)
         cursor = self.conn.cursor()
         cursor.executescript(CREATE_TABLES_SQL)
+        self.instaloader = instaloader.Instaloader()
 
     def insert_post(self, post, target):
 
-        ref_id = post.mediaid
+
+        media_id = post.mediaid
         file_location = 'data/meme_clips/' + str(target) + "/" +  str(target) + ".mp4"
-        length = post.video_duration
-        insert_post_sql = '''insert into meme_clips(source, ref_id, file_location, length) values (?,?,?,?)'''
+        duration = post.video_duration
+        insert_post_sql = '''insert into instagram_clips(media_id, file_location, duration, height, width) values (?,?,?,?,?)'''
         
+        # Finds the dimensions of the video using cv2
+        vid = cv2.VideoCapture(file_location)
+        height = vid.get(cv2.CAP_PROP_FRAME_HEIGHT)
+        width = vid.get(cv2.CAP_PROP_FRAME_WIDTH)
         cursor = self.conn.cursor()
-        cursor.execute(insert_post_sql, ("instagram", ref_id, file_location, length))
+        cursor.execute(insert_post_sql, (media_id, file_location, duration, height, width))
         self.conn.commit()
         
 
-    def get_random_clips(self, num_clips):
+    def get_random_clips(self, num_clips, height, width):
             
-        # An array with the dir of random clips 
-        clip_locations = []
-        cursor = self.conn.execute("select count(*) from meme_clips")
-        total_count = cursor.fetchone()[0]
-        clip_ids = random.sample(range(total_count), num_clips)
+        # An array with the dir of random clips  
+        clip_locations = [] 
 
-        for id in clip_ids:
-            row = self.conn.execute("select * from meme_clips where id = ?;", ((id, )))
-            clip = row.fetchone()
-            if clip != None:
-                clip_locations.append(clip[2]+"/"+str(clip[1])+".mp4")
+        # Query the entire instagram_clips table 
+        cursor = self.conn.cursor()
+        query = cursor.execute("select file_location from instagram_clips where height = ? and width = ?", (height, width))
+        rows = query.fetchall()
+        total_count = len(rows)
 
+        # Determine the indices of the random clips
+        clip_indices = random.sample(range(total_count), num_clips)
+
+        for idx in clip_indices:
+            clip_locations.append(rows[idx][0])
+                    
         return clip_locations
 
 
@@ -63,41 +77,53 @@ class DbHelper(object):
         Deletes duplicates. 
         """
 
-        # Loops through the entire dataset
-
         cursor = self.conn.cursor()
-        full_query = cursor.execute("select * from meme_clips")
+        full_query = cursor.execute("select * from instagram_clips")
         field_names = [i[0] for i in cursor.description]
 
+        # Determine column indices for each parameter
         height_col_index = field_names.index("height")
         width_col_index = field_names.index("width")
+        duration_col_index = field_names.index("duration")
         file_location_index = field_names.index("file_location")
-        ref_id_index = field_names.index("ref_id")
+        media_id_index = field_names.index("media_id")
 
         rows = full_query.fetchall()
 
         for row in rows:
+            # 
             id = row[0]
-            ref_id = row[ref_id_index] 
+            media_id = row[media_id_index] 
             file_location = row[file_location_index]
             height = row[height_col_index]
             width = row[width_col_index]
+            duration = row[duration_col_index]
 
-            # If video dimensions are missing, find them using ffmpeg and update the row
-            if height == -1 or width == -1:
-
+            # If video dimensions are missing, determine them using cv2 and update database
+            if height is None or height == 0:
                 
-                out = subprocess.run(['ffprobe', '-v', 'quiet', '-print_format', 'json', '-show_format', '-show_streams', file_location])
-                type(out)
+                vid = cv2.VideoCapture(file_location)
+                height = vid.get(cv2.CAP_PROP_FRAME_HEIGHT)
+                width = vid.get(cv2.CAP_PROP_FRAME_WIDTH)
 
-                cursor.execute("UPDATE meme_clips SET width = ?, height = ? WHERE id = ?", (int(width), int(height), id))
+                cursor.execute("UPDATE instagram_clips SET width = ?, height = ? WHERE media_id = ?",
+                    (width, height, media_id))
+    
+            # If video duration is missing, use moviepy to determine it and update the database
+            if duration is None or duration == 0:
                 
-        self.conn.commit()
+                clip = VideoFileClip(file_location)
+                clip_duration = clip.duration
+                clip.close()
+
+                cursor.execute("UPDATE instagram_clips SET duration = ? WHERE media_id = ?",
+                    (clip_duration, media_id))
+
+                print(id, clip_duration)
+
+
+            self.conn.commit()
+        
         
 
-
-
-dbh = DbHelper("data/databases/memes.db")
-
-dbh.update()
 

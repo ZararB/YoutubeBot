@@ -15,7 +15,12 @@ class InstaHelper(object):
 
         prof = Profile.from_username(self.ldr.context, profile_name)
         posts = prof.get_posts()
-        os.chdir('/home/zarar/YoutubeBot2/data/meme_vids')
+
+        try:
+            os.chdir('/home/zarar/YoutubeBot2/data/meme_clips')
+        except FileNotFoundError:
+            os.mkdir('/home/zarar/YoutubeBot2/data/meme_clips')
+            
         for post in posts:
             target = post.mediaid
             if post.is_video & self.ldr.download_post(post, target):

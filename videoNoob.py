@@ -11,25 +11,18 @@ class VideoNoob(object):
 
 
     
-    def create_video(self, num_clips=10):
+    def create_video(self, num_clips=10, height=480, width=480):
         
-        random_clip_locations = self.dbh.get_random_clips(num_clips)
+        random_clip_locations = self.dbh.get_random_clips(num_clips, height, width)
         clips = []
 
         for location in random_clip_locations:
             clips.append(VideoFileClip(location))
 
         final_clip = concatenate_videoclips(clips)
-        return final_clip.write_videofile("helloWorld.mp4")
+        return final_clip.write_videofile("data/videos/firstvid.mp4")
         
-    def create_test_video(self):
 
-        clip1 = VideoFileClip("data/meme_vids/1904396134945993987/1904396134945993987.mp4") # 480x480
-
-        clip2 = VideoFileClip("data/meme_vids/1980541592370440887/1980541592370440887.mp4") # 480x480
-
-        test_vid = concatenate_videoclips([clip1, clip2])
-        return test_vid.write_videofile("test_vid.mp4")
         
     def video_to_clips(video_location):
 
