@@ -66,7 +66,7 @@ class DbHelper(object):
 
         for idx in clip_indices:
             clip_locations.append(rows[idx][0])
-                    
+
         return clip_locations
 
 
