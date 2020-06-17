@@ -1,12 +1,13 @@
 from selenium import webdriver 
 from selenium.webdriver.common.keys import Keys
 import time
-
+import subprocess
 
 class youtubeHelper():
 
 
     def __init__(self):
+
         pass
 
 
@@ -21,7 +22,10 @@ class youtubeHelper():
         self.loggedIn = True 
         pass 
 
+    def upload_video(self, filepath, title, description):
 
-    def upload_video(self, video):
+
+        subprocess.run(["python3", "upload_video.py", 
+        "--file="+filepath, "--title="+title, "--description="+description])
 
         

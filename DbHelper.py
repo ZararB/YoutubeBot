@@ -16,13 +16,16 @@ class DbHelper(object):
     def __init__(self, db_dir):
         
 
-        CREATE_TABLES_SQL = ''' CREATE TABLE IF NOT EXISTS instagram_clips(
+        CREATE_TABLES_SQL = '''
+        CREATE TABLE IF NOT EXISTS clips(
             id integer primary key,
-            media_id integer, 
-            file_location string,
-            duration integer, 
+            media_id integer,
+            file_location string, 
+            source_platform string,
+            duration integer,
             width integer,
-            height integer
+            height integer,
+            desc string
         );
         '''
         
@@ -32,6 +35,22 @@ class DbHelper(object):
         cursor = self.conn.cursor()
         cursor.executescript(CREATE_TABLES_SQL)
         self.instaloader = instaloader.Instaloader()
+
+
+    def insert_tiktok(self, tiktok, download_location):
+
+        _id = tiktok["id"]
+        duration = tiktok["video"]["duration"]
+        width = tiktok["video"]["width"]
+        height = tiktok["video"]["height"]
+        desc = tiktok["desc"]
+        source_platform = "tiktok"
+
+        insert_tiktok_sql = '''insert into clips(media_id, file_location, source_platform, duration, width, height, desc) values (?,?,?,?,?,?,?)'''
+        cursor = self.conn.cursor()
+        cursor.execute(insert_tiktok_sql, (_id, download_location, source_platform, duration, width, height, desc))
+        self.conn.commit()
+
 
     def insert_post(self, post, target):
 
@@ -57,7 +76,7 @@ class DbHelper(object):
 
         # Query the entire instagram_clips table 
         cursor = self.conn.cursor()
-        query = cursor.execute("select file_location from instagram_clips where height = ? and width = ?", (height, width))
+        query = cursor.execute("select file_location from clips where height = ? and width = ?", (height, width))
         rows = query.fetchall()
         total_count = len(rows)
 

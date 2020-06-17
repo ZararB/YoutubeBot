@@ -1,4 +1,12 @@
 import videoNoob
+import youtubeHelper
 
-vNoob = videoNoob.VideoNoob()
-vNoob.create_video(20)
+vidNoob = videoNoob.VideoNoob()
+yth = youtubeHelper.youtubeHelper()
+
+#ttk.get_trending(50)
+
+
+#vidFilePath = vidNoob.create_video()
+vidFilePath = "data/videos/firstvid.mp4"
+yth.upload_video(vidFilePath, "HelloWorld", "Muhahaahha")
