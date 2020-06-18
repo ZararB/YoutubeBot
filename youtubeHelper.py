@@ -19,13 +19,17 @@ class youtubeHelper():
         passwordElement = self.driver.find_element_by_name("password")
         passwordElement.send_keys(password + Keys.RETURN)
 
-        self.loggedIn = True 
-        pass 
 
-    def upload_video(self, filepath, title, description):
+    def upload_video(self, channel, filepath, title, description):
 
 
+        channel_auth = "auths/" + channel + ".json"
+        original_filepath = "upload_video.py-oauth2.json"
+        subprocess.run(["rm", original_filepath])
+        subprocess.run(["cp", channel_auth, original_filepath])
         subprocess.run(["python3", "upload_video.py", 
-        "--file="+filepath, "--title="+title, "--description="+description])
+        "--file="+filepath, "--title="+title, "--description="+description, "--noauth_local_webserver"])
 
         
+
+

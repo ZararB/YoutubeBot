@@ -1,7 +1,7 @@
-import videoNoob
+#import videoNoob
 import youtubeHelper
 
-vidNoob = videoNoob.VideoNoob()
+#vidNoob = videoNoob.VideoNoob()
 yth = youtubeHelper.youtubeHelper()
 
 #ttk.get_trending(50)
@@ -9,4 +9,4 @@ yth = youtubeHelper.youtubeHelper()
 
 #vidFilePath = vidNoob.create_video()
 vidFilePath = "data/videos/firstvid.mp4"
-yth.upload_video(vidFilePath, "HelloWorld", "Muhahaahha")
+yth.upload_video("quickdopehit", vidFilePath, "HelloWorld", "Muhahaahha")

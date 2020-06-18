@@ -1,6 +1,4 @@
 import sqlite3 as sql 
-import instaloader
-from instaloader import Post
 import numpy as np 
 import random
 import cv2
@@ -27,14 +25,27 @@ class DbHelper(object):
             height integer,
             desc string
         );
+
+        CREATE TABLE IF NOT EXISTS videos(
+            id integer primary key, 
+            media_id integer,
+            channel string,
+            file_location string,
+            thumbnail_location string,
+            title string,
+            desc string, 
+            duration integer,
+            upload_time integer,
+            views integer
+
+        );
         '''
         
-            # Additional tables to add later
+        # Additional tables to add later
 
         self.conn = sql.connect(db_dir)
         cursor = self.conn.cursor()
         cursor.executescript(CREATE_TABLES_SQL)
-        self.instaloader = instaloader.Instaloader()
 
 
     def insert_tiktok(self, tiktok, download_location):
@@ -58,7 +69,7 @@ class DbHelper(object):
         media_id = post.mediaid
         file_location = 'data/meme_clips/' + str(target) + "/" +  str(target) + ".mp4"
         duration = post.video_duration
-        insert_post_sql = '''insert into instagram_clips(media_id, file_location, duration, height, width) values (?,?,?,?,?)'''
+        insert_post_sql = '''insert into clips(media_id, file_location, duration, height, width) values (?,?,?,?,?)'''
         
         # Finds the dimensions of the video using cv2
         vid = cv2.VideoCapture(file_location)
