@@ -25,6 +25,18 @@ class DbHelper(object):
             height integer,
             desc string
         );
+        CREATE TABLE IF NOT EXISTS tiktoks(
+            id integer primary key,
+            tiktok_id integer,
+            username string,
+            file_location string,
+            duration integer,
+            width integer,
+            height integer,
+            desc string, 
+            song_name string,
+            song_id integer
+        );
 
         CREATE TABLE IF NOT EXISTS videos(
             id integer primary key, 
@@ -35,10 +47,19 @@ class DbHelper(object):
             title string,
             desc string, 
             duration integer,
-            upload_time integer,
+            upload_date integer,
             views integer
 
         );
+
+        CREATE TABLE IF NOT EXISTS my_videos(
+            id integer primary key,
+            channel string,
+            file_location string,
+            thumbnail_location string,
+            upload_date integer,
+            views integer
+        )
         '''
         
         # Additional tables to add later
@@ -50,16 +71,18 @@ class DbHelper(object):
 
     def insert_tiktok(self, tiktok, download_location):
 
-        _id = tiktok["id"]
+        _id = int(tiktok["id"])
         duration = tiktok["video"]["duration"]
         width = tiktok["video"]["width"]
         height = tiktok["video"]["height"]
         desc = tiktok["desc"]
         source_platform = "tiktok"
-
-        insert_tiktok_sql = '''insert into clips(media_id, file_location, source_platform, duration, width, height, desc) values (?,?,?,?,?,?,?)'''
+        username = tiktok['author']['uniqueId']
+        song_name = tiktok['music']['title']
+        song_id = int(tiktok['music']['id'])
+        insert_tiktok_sql = '''insert into tiktoks(tiktok_id, username, file_location, duration, width, height, desc, song_name, song_id) values (?,?,?,?,?,?,?,?,?)'''
         cursor = self.conn.cursor()
-        cursor.execute(insert_tiktok_sql, (_id, download_location, source_platform, duration, width, height, desc))
+        cursor.execute(insert_tiktok_sql, (_id, username, download_location, duration, width, height, desc, song_name, song_id))
         self.conn.commit()
 
 
