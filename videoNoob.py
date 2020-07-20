@@ -27,6 +27,8 @@ class VideoNoob(object):
 
     def generateTikTokVideo(self, users, TYPE='compilation', num_clips=2):
 
+        #TODO Should return youtubeVideo object 
+
         if TYPE == 'compilation':
             title = 'Best TikToks Compilation # ' + str(random.randint(1,30))
             desc = 'Watch all the best TikToks in one place.'

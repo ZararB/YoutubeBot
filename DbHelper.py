@@ -8,7 +8,6 @@ from moviepy.editor import VideoFileClip
 
 
 class DbHelper(object):
-
     
 
     def __init__(self, db_dir):

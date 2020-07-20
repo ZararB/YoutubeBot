@@ -6,6 +6,7 @@ if __name__ == '__main__':
 
     agent = Agent()
     #agent.update()
-    print(agent.generateContent())
+    generatedVid = agent.generateContent()
     
+    # agent.uploadVid(generatedVid)    
 
