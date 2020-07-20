@@ -1,6 +1,6 @@
 data/
 __pycache__
-venv/
+venv
 .vscode/
 *.mp4
 tmp/
