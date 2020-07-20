@@ -12,7 +12,7 @@ class VideoNoob(object):
         self.dbh = DbHelper.DbHelper("data/databases/memes.db")
 
 
-    def create_video(self, clip_locations):
+    def create_video(self, clip_locations, vid_location):
         
         clips = []
 
@@ -21,7 +21,7 @@ class VideoNoob(object):
 
         final_clip = concatenate_videoclips(clips)
         
-        return final_clip.write_videofile("data/videos/firstvid.mp4")
+        return final_clip.write_videofile(vid_location)
         
 
 
@@ -30,14 +30,18 @@ class VideoNoob(object):
         #TODO Should return youtubeVideo object 
 
         if TYPE == 'compilation':
-            title = 'Best TikToks Compilation # ' + str(random.randint(1,30))
+            compilationNumber = random.randint(1, 30)
+            
+            title = 'Best TikToks Compilation # ' + str(compilationNumber)
             desc = 'Watch all the best TikToks in one place.'
             cursor = self.dbh.conn.execute('SELECT * FROM tiktoks')
             tiktoks = cursor.fetchall()
             randomTikToks = random.sample(tiktoks, num_clips)
 
             clip_locations = [randomTikToks[i][5] for i in range(num_clips)]
-            vid_location = self.create_video(clip_locations)
+            vid_location = 'data/videos/tiktokofficial/randomCompilation' + str(compilationNum) + '.mp4'
+            
+            self.create_video(clip_locations, vid_location)
 
             return (vid_location, title, desc)
 
@@ -47,8 +51,9 @@ class VideoNoob(object):
             if len(users) != 1:
                 print('Cannot generate video. Incorrect number of users.')
                 return None
-
-            title = "{}'s Best TikToks Compilation # ".format(users[0]) + str(random.randint(1,30))
+            compilationNumber = random.randint(1, 30)
+            title = "{}'s Best TikToks Compilation # ".format(users[0]) + str(compilationNumber)
+            
             desc = 'Watch all the best TikToks in one place.'
 
             cursor = self.dbh.conn.execute('SELECT * FROM tiktoks where username = ?', (users[0],))
@@ -56,7 +61,9 @@ class VideoNoob(object):
             randomTikToks = random.sample(tiktoks, num_clips)
 
             clip_locations = [randomTikToks[i][5] for i in range(num_clips)]
-            vid_location = self.create_video(clip_locations)
+            vid_location = 'data/videos/tiktokofficial/' + users[0] + '_' + str(compilationNumber) + '.mp4'
+
+            self.create_video(clip_locations,vid_location)
 
             return (vid_location, title, desc)
 
