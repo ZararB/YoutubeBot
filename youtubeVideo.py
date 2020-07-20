@@ -1,6 +1,8 @@
-class YoutubeVideo():
+class YoutubeVideo:
 
-    def __init__(self):
+    def __init__(self, title):
 
-        pass
+        self.title = title 
+
+        
 

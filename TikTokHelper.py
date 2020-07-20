@@ -2,6 +2,7 @@ from TikTokApi import TikTokApi
 from DbHelper import DbHelper
 from pathlib import Path
 import os 
+
 class TikTokHelper():
 
 
@@ -27,7 +28,7 @@ class TikTokHelper():
 
 
     def get_user(self, username, count=50):
-
+        print('Downloading {} TikToks from {}'.format(count, username))
         user_path = "data/tiktok/"+username
         Path(user_path).mkdir(parents=True, exist_ok=True)
 
@@ -51,7 +52,3 @@ class TikTokHelper():
 
                 
 
-
-
-tkh = TikTokHelper()
-tkh.get_user("charlidamelio", count=100)

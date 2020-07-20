@@ -1,1 +1,8 @@
 venv
+*.pyc
+tmp
+__pycache__
+youtubebot.code-workspace
+data
+.vscode
+

@@ -32,11 +32,12 @@ class DbHelper(object):
             id integer primary key,
             tiktok_id integer,
             username string,
+            desc string, 
+            play_count integer,
             file_location string,
             duration integer,
             width integer,
             height integer,
-            desc string, 
             song_name string,
             song_id integer
         );
@@ -74,17 +75,20 @@ class DbHelper(object):
     def insert_tiktok(self, tiktok, download_location):
 
         _id = int(tiktok["id"])
+        username = tiktok['author']['uniqueId']
+        desc = tiktok['desc']
+        play_count = tiktok['stats']['playCount']
         duration = tiktok["video"]["duration"]
         width = tiktok["video"]["width"]
         height = tiktok["video"]["height"]
         desc = tiktok["desc"]
         source_platform = "tiktok"
-        username = tiktok['author']['uniqueId']
         song_name = tiktok['music']['title']
         song_id = int(tiktok['music']['id'])
-        insert_tiktok_sql = '''insert into tiktoks(tiktok_id, username, file_location, duration, width, height, desc, song_name, song_id) values (?,?,?,?,?,?,?,?,?)'''
+
+        insert_tiktok_sql = '''insert into tiktoks(tiktok_id, username, desc, play_count, file_location, duration, width, height, song_name, song_id) values (?,?,?,?,?,?,?,?,?,?)'''
         cursor = self.conn.cursor()
-        cursor.execute(insert_tiktok_sql, (_id, username, download_location, duration, width, height, desc, song_name, song_id))
+        cursor.execute(insert_tiktok_sql, (_id, username, desc, play_count, download_location, duration, width, height, song_name, song_id))
         self.conn.commit()
 
 
