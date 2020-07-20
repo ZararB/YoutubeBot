@@ -15,6 +15,8 @@ class DbHelper(object):
         
 
         CREATE_TABLES_SQL = '''
+        
+        
         CREATE TABLE IF NOT EXISTS clips(
             id integer primary key,
             media_id integer,
@@ -25,6 +27,7 @@ class DbHelper(object):
             height integer,
             desc string
         );
+
         CREATE TABLE IF NOT EXISTS tiktoks(
             id integer primary key,
             tiktok_id integer,
@@ -49,7 +52,6 @@ class DbHelper(object):
             duration integer,
             upload_date integer,
             views integer
-
         );
 
         CREATE TABLE IF NOT EXISTS my_videos(
@@ -59,7 +61,7 @@ class DbHelper(object):
             thumbnail_location string,
             upload_date integer,
             views integer
-        )
+        );
         '''
         
         # Additional tables to add later
@@ -87,7 +89,6 @@ class DbHelper(object):
 
 
     def insert_post(self, post, target):
-
 
         media_id = post.mediaid
         file_location = 'data/meme_clips/' + str(target) + "/" +  str(target) + ".mp4"
