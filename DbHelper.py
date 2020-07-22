@@ -7,6 +7,8 @@ from subprocess import PIPE, STDOUT
 from moviepy.editor import VideoFileClip
 
 
+#TODO Rewrite using SQLAlchemy 
+
 class DbHelper(object):
     
 

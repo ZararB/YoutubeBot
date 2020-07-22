@@ -26,7 +26,26 @@ class Agent(object):
 
 
 
-    
+    def findContentStreams(self, platform, tags, num_streams=10):
+        '''
+        Returns list of num_streams platform specific channels
+        '''
+        streams = []
+
+        if platform == 'youtube':
+
+            return None
+
+
+        elif platform == 'tiktok':
+
+
+            return None
+
+
+        elif platform == 'instagram':
+            
+            return None  
 
 
     def generateContent(self):
