@@ -8,6 +8,12 @@ import random
 
 class VideoNoob(object):
 
+        #TODO generate top10 general and top10 user 
+        #TODO Incorporate views and other data into determining which vids to use  
+        #TODO Should return youtubeVideo object 
+        #TODO Add 'fluff' to make content more human
+        #TODO Include channel names in corner along with desc, hashtags, etc 
+
     def __init__(self):
         self.dbh = DbHelper.DbHelper("data/databases/memes.db")
 
@@ -53,9 +59,6 @@ class VideoNoob(object):
 
         return (vid_location, title, desc)
 
-
-
-        pass
     
     def generateTikTokUserCompilation(self, user):
         pass
@@ -68,55 +71,10 @@ class VideoNoob(object):
         pass
 
 
-    def generateTikTokVideo(self, users, TYPE='compilation', num_clips=2):
-        
-        #TODO generate top10 general and top10 user 
-        #TODO Incorporate views and other data into determining which vids to use  
-        #TODO Should return youtubeVideo object 
-        #TODO Divide into multiple functions? 
-        #TODO Add 'fluff' to make content more human
-        #TODO Include channel names in corner along with desc, hashtags, etc 
         
 
+        
 
-        if TYPE == 'compilation':
-            compilationNumber = random.randint(1, 30)
-            
-            title = 'Best TikToks Compilation # ' + str(compilationNumber)
-            desc = 'Watch all the best TikToks in one place.'
-            cursor = self.dbh.conn.execute('SELECT * FROM tiktoks')
-            tiktoks = cursor.fetchall()
-            randomTikToks = random.sample(tiktoks, num_clips)
-
-            clip_locations = [randomTikToks[i][5] for i in range(num_clips)]
-            vid_location = 'data/videos/tiktokofficial/randomCompilation' + str(compilationNum) + '.mp4'
-            
-            self.create_video(clip_locations, vid_location)
-
-            return (vid_location, title, desc)
-
-
-
-        elif TYPE == 'userCompilation':
-            if len(users) != 1:
-                print('Cannot generate video. Incorrect number of users.')
-                #TODO Raise exception instead of returning None
-                return None
-            compilationNumber = random.randint(1, 30)
-            title = "{}'s Best TikToks Compilation # ".format(users[0]) + str(compilationNumber)
-            
-            desc = 'Watch all the best TikToks in one place.'
-
-            cursor = self.dbh.conn.execute('SELECT * FROM tiktoks where username = ?', (users[0],))
-            tiktoks = cursor.fetchall()
-            randomTikToks = random.sample(tiktoks, num_clips)
-
-            clip_locations = [randomTikToks[i][5] for i in range(num_clips)]
-            vid_location = 'data/videos/tiktokofficial/' + users[0] + '_' + str(compilationNumber) + '.mp4'
-
-            self.create_video(clip_locations,vid_location)
-
-            return (vid_location, title, desc)
 
 
             
