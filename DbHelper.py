@@ -5,9 +5,15 @@ import cv2
 import subprocess
 from subprocess import PIPE, STDOUT
 from moviepy.editor import VideoFileClip
-
-
+import TikTokApi as tiktokapi
+import os
 #TODO Rewrite using SQLAlchemy 
+#TODO Create YoutubeChannels table (id, channel_name, subs, total_view, tags ex. tiktok, sports, fortnite etc, num_vids ....)
+#TODO Write Function to populate YoutubeChannels table 
+#TODO Clean tiktok database by removing tiktoks that dont meet certain criteria set by other tiktoks (ex average num_views)
+#TODO Add numTimesUsed column and averageVidViews column in tiktok table to improve quality of database over time 
+
+
 
 class DbHelper(object):
     
@@ -35,6 +41,7 @@ class DbHelper(object):
             username string,
             desc string, 
             play_count integer,
+            download_addr string,
             file_location string,
             duration integer,
             width integer,
@@ -64,6 +71,12 @@ class DbHelper(object):
             upload_date integer,
             views integer
         );
+
+        CREATE TABLE IF NOT EXISTS tiktok_channels(
+            id integer primary key,
+            nickname string,
+            uniqueId string
+        )
         '''
         
         # Additional tables to add later
@@ -79,17 +92,22 @@ class DbHelper(object):
         username = tiktok['author']['uniqueId']
         desc = tiktok['desc']
         play_count = tiktok['stats']['playCount']
+        download_addr = tiktok['video']['downloadAddr']
         duration = tiktok["video"]["duration"]
         width = tiktok["video"]["width"]
         height = tiktok["video"]["height"]
         desc = tiktok["desc"]
         source_platform = "tiktok"
         song_name = tiktok['music']['title']
-        song_id = int(tiktok['music']['id'])
+        if tiktok['music']['id'] != '':
+            song_id = int(tiktok['music']['id'])
 
-        insert_tiktok_sql = '''insert into tiktoks(tiktok_id, username, desc, play_count, file_location, duration, width, height, song_name, song_id) values (?,?,?,?,?,?,?,?,?,?)'''
+        else:
+            song_id = -1
+
+        insert_tiktok_sql = '''insert into tiktoks(tiktok_id, username, desc, play_count, download_addr ,file_location, duration, width, height, song_name, song_id) values (?,?,?,?,?,?,?,?,?,?,?)'''
         cursor = self.conn.cursor()
-        cursor.execute(insert_tiktok_sql, (_id, username, desc, play_count, download_location, duration, width, height, song_name, song_id))
+        cursor.execute(insert_tiktok_sql, (_id, username, desc, play_count, download_addr, download_location, duration, width, height, song_name, song_id))
         self.conn.commit()
 
 
@@ -183,6 +201,53 @@ class DbHelper(object):
 
             self.conn.commit()
         
+
+    def insert_video(self, vid_location, title, desc):
+
+
+            
+        pass 
+
+        
+    def update0(self):
+        '''
+        Loops through every table and fills in missing data and downloads files that are missing
+        '''
+
+        cursor = self.conn.execute('SELECT * FROM tiktoks') 
+        tiktoks = cursor.fetchall()
+
+        for tiktok in tiktoks:
+
+            # Download if not downloaded
+            file_location = tiktok[6]
+            download_addr = tiktok[5]
+            if os.path.isfile(file_location):
+                continue
+            else:
+                tiktokapi.get_Video_By_DownloadURL(download_addr)
+
         
 
+        tikTokRootDir = os.getcwd() + '/tiktok/'
+        downloadedTikTokFiles = []
+        for path, subdirs, files in os.walk(tikTokRootDir):
+
+            for name in files:
+                fileLocation = os.path.join(path, name)
+                titkok_db_search = self.conn.cursor('select * from tiktoks where file_location = ?', fileLocation)
+
+                if len(tiktok_db_search.fetch_all()) != 1:
+                    tiktokId = fileLocation.split('/')[-1][:-4]
+
+                    tiktok = tiktokapi.getTikTokById(tiktokId)
+                    self.insert_tiktok(tiktok, fileLocation)
+                    downloadedTikTokFiles.append(os.path.join(path, name))
+
+                else:
+                    print('Tiktok already in Database')
+
+                
+
+       
 

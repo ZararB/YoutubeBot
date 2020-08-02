@@ -1,54 +1,70 @@
 from TikTokApi import TikTokApi
-from DbHelper import DbHelper
 from pathlib import Path
 import os 
+
 
 class TikTokHelper():
 
 
-    def __init__(self):
+    def __init__(self, dbh ):
         self.api = TikTokApi()
-        self.dbh = DbHelper("data/databases/memes.db")
-    
-    def get_trending(self, count=10):
+        #self.dbh = DbHelper('data/databases/memes.db')
+        self.dbh = dbh
 
+
+    def get_trending(self, count=10):
+        username = tiktok 
+        user_path = "data/tiktok/"+username
+        Path(user_path).mkdir(parents=True, exist_ok=True)
+        
         trending_tiktoks = self.api.trending(count=count)
 
         for tiktok in trending_tiktoks:
-
-            # Download Tiktok
             
-            download_location = "data/tiktok/" + tiktok["id"] + ".mp4"
-            tiktok_data = self.api.get_Video_By_TikTok(tiktok)
-            with open(download_location, "wb") as out:
-                out.write(tiktok_data)
 
-            self.dbh.insert_tiktok(tiktok, download_location)
-        pass
+            download_location = "data/tiktok/" + username + '/' + tiktok["id"] + ".mp4"
+            
+            if os.path.isfile(download_location):
+                print("Tiktok already Downloaded. {}".format(tiktoks_downloaded))
+                tiktoks_downloaded += 1
+                continue
+        
+            vid_data = self.api.get_Video_By_TikTok(tiktok)
+            out = open(download_location, 'wb')
+            out.write(vid_data)
+            out.close()
+            try:
+                self.dbh.insert_tiktok(tiktok, download_location)
+            except AttributeError as e:
+                print(e)
 
 
     def get_user(self, username, count=50):
-        print('Downloading {} TikToks from {}'.format(count, username))
+        print('Getting user {}...'.format(username))
         user_path = "data/tiktok/"+username
         Path(user_path).mkdir(parents=True, exist_ok=True)
 
         tiktoks = self.api.byUsername(username, count=count)
-
+        tiktoks_downloaded = 0 
         for tiktok in tiktoks:
             download_location = user_path + "/" + tiktok["id"] + ".mp4"
             
             # Skip if already downloaded
+
             if os.path.isfile(download_location):
-                print("Tiktok already Downloaded.")
+                print("Tiktok already Downloaded. {}".format(tiktoks_downloaded))
+                tiktoks_downloaded += 1
                 continue
+
+            vid_data = self.api.get_Video_By_TikTok(tiktok)
+            out = open(download_location, 'wb')
+            out.write(vid_data)
+            out.close()
+            try:
+                self.dbh.insert_tiktok(tiktok, download_location)
+            except AttributeError as e:
+                print(e)
+
+        
+
             
-            with open(download_location, "wb") as out:
-                try:
-                    vid_data = self.api.get_Video_By_TikTok(tiktok)
-                    out.write(vid_data)
-                    self.dbh.insert_tiktok(tiktok, download_location)
-                except AttributeError as e:
-                    print(e)
-
-                
-

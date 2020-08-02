@@ -6,4 +6,6 @@ youtubebot.code-workspace
 data
 .vscode
 *.mp3
+*.mp4
 geckodriver.log
+*.swp
