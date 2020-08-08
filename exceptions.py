@@ -1,0 +1,4 @@
+
+
+class ContentException(Exception):
+    pass

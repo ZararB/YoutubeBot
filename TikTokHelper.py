@@ -43,7 +43,7 @@ class TikTokHelper():
         print('Getting user {}...'.format(username))
         user_path = "data/tiktok/"+username
         Path(user_path).mkdir(parents=True, exist_ok=True)
-
+        
         tiktoks = self.api.byUsername(username, count=count)
         tiktoks_downloaded = 0 
         for tiktok in tiktoks:

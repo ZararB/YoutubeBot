@@ -147,69 +147,12 @@ class DbHelper(object):
         return clip_locations
 
 
-    def update(self):
-        """ 
-        Checks the database for entries that have not been downloaded 
-        and downloads them. 
-        Deletes duplicates. 
-        """
-
-        cursor = self.conn.cursor()
-        full_query = cursor.execute("select * from instagram_clips")
-        field_names = [i[0] for i in cursor.description]
-
-        # Determine column indices for each parameter
-        height_col_index = field_names.index("height")
-        width_col_index = field_names.index("width")
-        duration_col_index = field_names.index("duration")
-        file_location_index = field_names.index("file_location")
-        media_id_index = field_names.index("media_id")
-
-        rows = full_query.fetchall()
-
-        for row in rows:
-            # 
-            id = row[0]
-            media_id = row[media_id_index] 
-            file_location = row[file_location_index]
-            height = row[height_col_index]
-            width = row[width_col_index]
-            duration = row[duration_col_index]
-
-            # If video dimensions are missing, determine them using cv2 and update database
-            if height is None or height == 0:
-                
-                vid = cv2.VideoCapture(file_location)
-                height = vid.get(cv2.CAP_PROP_FRAME_HEIGHT)
-                width = vid.get(cv2.CAP_PROP_FRAME_WIDTH)
-
-                cursor.execute("UPDATE instagram_clips SET width = ?, height = ? WHERE media_id = ?",
-                    (width, height, media_id))
-    
-            # If video duration is missing, use moviepy to determine it and update the database
-            if duration is None or duration == 0:
-                
-                clip = VideoFileClip(file_location)
-                clip_duration = clip.duration
-                clip.close()
-
-                cursor.execute("UPDATE instagram_clips SET duration = ? WHERE media_id = ?",
-                    (clip_duration, media_id))
-
-                print(id, clip_duration)
-
-
-            self.conn.commit()
-        
-
     def insert_video(self, vid_location, title, desc):
-
-
-            
+ 
         pass 
 
         
-    def update0(self):
+    def update(self):
         '''
         Loops through every table and fills in missing data and downloads files that are missing
         '''
@@ -229,7 +172,7 @@ class DbHelper(object):
 
         
 
-        tikTokRootDir = os.getcwd() + '/tiktok/'
+        tikTokRootDir = os.getcwd() + '/data/tiktok/'
         downloadedTikTokFiles = []
         for path, subdirs, files in os.walk(tikTokRootDir):
 

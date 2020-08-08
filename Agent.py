@@ -9,7 +9,7 @@ import numpy as np
 class Agent(object):
 
     global TikTok_mainStreamChannels
-    TikTok_mainStreamChannels = ['charlidamelio', 'lorengray', 'zachking', 'addisonre', 'babyariel']
+    TikTok_mainStreamChannels = [ 'babyariel',  'lorengray', 'zachking', 'charlidamelio', 'addisonre']
     channels = ['tiktokofficial']
 
 
@@ -25,9 +25,14 @@ class Agent(object):
         '''
         Downloads recently uploaded content from main streams
         '''
-        self.dbh.update0()
+        self.dbh.update()
         for user in TikTok_mainStreamChannels:
-            self.tkh.get_user(user, count=300)
+            while True:
+                try:
+                    self.tkh.get_user(user, count=500)
+                    break
+                except:
+                    pass
         
 
 
@@ -64,7 +69,7 @@ class Agent(object):
         # Generate content randomly 
         #TODO Modify probabilities of generating different types of content based on views 
 
-        compilation_prob = 0
+        compilation_prob = 0.3
         user_compilation_prob = 1 - compilation_prob
 
         if np.random.rand() < compilation_prob:
@@ -79,7 +84,10 @@ class Agent(object):
 
 
     def marketContent(self, file_location):
-
+        '''
+        A function that generates a title and thumbnail based on the video data and returns
+        a youtubeVideo object
+        '''
         #return youtubeVideo
         return youtubeVideo
 

@@ -4,6 +4,7 @@ import cv2
 import numpy as np
 import DbHelper 
 import random 
+from exceptions import *
 import os
 import matplotlib.pyplot as plt 
 
@@ -90,9 +91,14 @@ class VideoNoob(object):
                     break
             
         tiktoks = cursor.fetchall()
+        num_clips = min(len(tiktoks), num_clips)
+        
+        if num_clips == 0:
+            raise ContentException
+        
         randomTikToks = random.sample(tiktoks, num_clips)
 
-        clip_locations = [randomTikToks[i][5] for i in range(num_clips)]
+        clip_locations = [randomTikToks[i][6] for i in range(num_clips)]
         
         # Check if video was made properly
         success = self.create_video(clip_locations, vid_location, clip_dims=(width, height))
