@@ -9,7 +9,7 @@ import numpy as np
 class Agent(object):
 
     global TikTok_mainStreamChannels
-    TikTok_mainStreamChannels = [ 'babyariel',  'lorengray', 'zachking', 'charlidamelio', 'addisonre']
+    TikTok_mainStreamChannels = [  'lorengray', 'zachking', 'babyariel', 'charlidamelio', 'addisonre']
     channels = ['tiktokofficial']
 
 
@@ -25,14 +25,14 @@ class Agent(object):
         '''
         Downloads recently uploaded content from main streams
         '''
-        self.dbh.update()
+        #self.dbh.update()
         for user in TikTok_mainStreamChannels:
-            while True:
-                try:
-                    self.tkh.get_user(user, count=500)
-                    break
-                except:
-                    pass
+            
+            try:
+                self.tkh.get_user(user, count=500)
+            except:
+                print('Uh oh')
+                pass
         
 
 
@@ -65,7 +65,7 @@ class Agent(object):
         '''
         Generates new Youtube videos based on ?? 
         '''
-
+        '''
         # Generate content randomly 
         #TODO Modify probabilities of generating different types of content based on views 
 
@@ -78,7 +78,8 @@ class Agent(object):
             user = random.sample(TikTok_mainStreamChannels, 1)[0]
             return self.vidNoob.generateTikTokCompilation(user=user, num_clips=num_clips)
 
-
+        '''
+        return self.vidNoob.generateTikTokBattle('charlidamelio', 'lorengray')
         
 
 

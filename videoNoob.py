@@ -34,7 +34,7 @@ class VideoNoob(object):
             rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             return rgb_frame 
 
-
+        
         print('Making background clip...')
         background_clip = VideoClip(make_frame, duration=content_duration)
         print('Finished making background clip.')
@@ -114,8 +114,76 @@ class VideoNoob(object):
     def generateTikTokUserCompilation(self, user):
         pass
 
-    def generateTikTokBattle(self, user1, user2):
+    def generateTikTokBattle(self, user1, user2, numClips=2,  width=720,  height=1280):
+        
+        leftClips = []
+        rightClips = []
+        cursor1 = self.dbh.conn.execute('SELECT * FROM tiktoks where username = ? AND height = ? AND width = ?', (user1, height, width))
+        cursor2 = self.dbh.conn.execute('SELECT * FROM tiktoks where username = ? AND height = ? AND width = ?', (user2, height, width))
+
+        user1tiktoks = cursor1.fetchall()
+        user2tiktoks = cursor2.fetchall()
+
+        for tiktok1 in user1tiktoks:
+            songId1 = tiktok1[11]
+            for tiktok2 in user2tiktoks:
+                songId2 = tiktok2[11]
+
+                if songId1 == songId2:
+                    # Create clip of both tiktoks
+                    leftClips.append(tiktok1[6])
+                    rightClips.append(tiktok2[6])
+
+            if len(leftClips) > numClips:
+                break
+
+        self.createBattleVideo(leftClips, rightClips)
+
         pass
+
+
+    
+    def createBattleVideo(self, leftClips, rightClips, background='data/backgrounds/tiktok0.png'):
+        clips1 = []
+        clips2 = []
+
+        for i in range(len(leftClips)):
+            leftClip = VideoFileClip(leftClips[i])
+            clips1.append(leftClip)
+            rightClip = VideoFileClip(rightClips[i]).subclip(0, leftClip.duration)
+            clips2.append(rightClip)
+            
+
+        leftClip = concatenate_videoclips(clips1, method='compose')
+        rightClip = concatenate_videoclips(clips2, method='compose')
+        size1 = leftClip.size
+        size2 = rightClip.size
+        len1 = leftClip.duration
+        len2 = rightClip.duration
+        leftClip.set_position(('left'))
+        rightClip.set_position(('right'))
+
+        def make_frame(t):
+            cwd = os.getcwd()
+            frame = cv2.imread(background)
+            rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            return rgb_frame 
+
+        
+        print('Making background clip...')
+        background_clip = VideoClip(make_frame, duration=leftClip.duration)
+        dur = background_clip.duration
+        si = background_clip.size
+        print('Finished making background clip.')
+
+        final_clip = CompositeVideoClip([background_clip, leftClip, rightClip])
+        final_clip.write_videofile('Battletest.mp4')
+        content_clip.close()
+        background_clip.close()
+        final_clip.close()
+
+
+        return ('Battletest.mp4', 'Battle Test', 'wabba')
 
     def generateTopN(self, user, N):
 
