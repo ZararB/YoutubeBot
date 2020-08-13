@@ -31,19 +31,19 @@ class TikTokHelper():
             channelPath = 'data/tiktok/' + channelUniqueId
             Path(channelPath).mkdir(exist_ok=True)
             try:
+                # Tries to get User and enter into database. 
+                # Exception is raised if channel already in db
                 channelDict = self.api.getUser(channelUniqueId)
                 channel = TiktokChannel.channelFromChannelDict(channelDict)
                 self.session.add(channel)
                 self.session.commit()
-
-
             except:
                 pass
 
             downloadLocation = channelPath + '/' + tiktokId + '.mp4'
             
             if not os.path.isfile(downloadLocation):
-                # Implement logging
+                # If tiktok is not downloaded, download and save in database
                 vid_data = self.api.get_Video_By_TikTok(tiktokDict)
                 out = open(downloadLocation, 'wb')
                 out.write(vid_data)
@@ -63,6 +63,8 @@ class TikTokHelper():
         
         Path(channelPath).mkdir(exist_ok=True)
         try:
+            # Tries to get User and enter into database. 
+            # Exception is raised if channel already in db
             channelDict = self.api.getUser(channelUniqueId)
             channel = TiktokChannel.channelFromChannelDict(channelDict)
             self.session.add(channel)
@@ -77,11 +79,11 @@ class TikTokHelper():
 
 
         for tiktokDict in tiktoks:
-            downloadLocation = channelPath + '/' + tiktokDict['id'] + '.mp4'
             
-            # Skip if already downloaded
+            downloadLocation = channelPath + '/' + tiktokDict['id'] + '.mp4'     
 
             if not os.path.isfile(downloadLocation):
+                # If tiktok is not downloaded, download and save in database
                 vid_data = self.api.get_Video_By_TikTok(tiktokDict)
                 out = open(downloadLocation, 'wb')
                 out.write(vid_data)

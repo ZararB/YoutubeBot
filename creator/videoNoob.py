@@ -2,7 +2,6 @@
 from moviepy.editor import *
 import cv2
 import numpy as np
-import DbHelper 
 import random 
 from exceptions import *
 import os
@@ -16,6 +15,7 @@ class VideoNoob(object):
         #TODO Add 'fluff' to make content more human
         #TODO Include channel names in corner along with desc, hashtags, etc 
         #TODO Rewrite using sqlalchemy 
+        
 
     def __init__(self, dbh):
         self.dbh = dbh
