@@ -7,16 +7,11 @@ class youtubeHelper():
         
         pass
 
-
-    def get_channelVids(self, channel_name, count=10):
-
-        pass
-
     def upload_video(self, channel, filepath, title, description):
 
 
-        channel_auth = "auths/" + channel + ".json"
-        original_filepath = "upload_video.py-oauth2.json"
+        channel_auth = "~/YoutubeBot/auths/" + channel + ".json"
+        original_filepath = "~/YoutubeBot/auths/upload_video.py-oauth2.json"
         subprocess.run(["rm", original_filepath])
         subprocess.run(["cp", channel_auth, original_filepath])
         subprocess.run(["python3", "upload_video.py", 

@@ -1,7 +1,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String, ForeignKey
-from tiktokChannel import TiktokChannel
 
 
 engine = create_engine('sqlite:///data/databases/memes2.db', echo=True)
@@ -9,17 +8,12 @@ Base = declarative_base(engine)
 
 
 
-class YoutubeVideo(Base):
+class Instagram(Base):
 
-    __tablename__ = 'videos'
+    __tablename__ = 'instagram'
 
     id = Column(Integer, primary_key=True)
-    channelId = Column(Integer, ForeignKey(YoutubeChannel.id))
-    title = Column(String)
-    desc = Column(String)
-    thumbnailFileLocation = Column(String)
-
-	
+    
 
 
 
