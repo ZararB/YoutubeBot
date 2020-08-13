@@ -6,7 +6,7 @@ from tiktokChannel import TiktokChannel
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-engine = create_engine('sqlite:///data/databases/memes2.db', echo=True)
+engine = create_engine('postgresql://postgres:wabbalabba@localhost/youtubebot', echo=True)
 Session = sessionmaker(bind = engine)
 
 
@@ -29,12 +29,16 @@ class TikTokHelper():
             
 
             channelPath = 'data/tiktok/' + channelUniqueId
-
-            if not os.path.isdir(channelPath):
-                Path(channelPath).mkdir()
+            Path(channelPath).mkdir(exist_ok=True)
+            try:
                 channelDict = self.api.getUser(channelUniqueId)
                 channel = TiktokChannel.channelFromChannelDict(channelDict)
                 self.session.add(channel)
+                self.session.commit()
+
+
+            except:
+                pass
 
             downloadLocation = channelPath + '/' + tiktokId + '.mp4'
             
@@ -56,13 +60,15 @@ class TikTokHelper():
         print('Getting user {}...'.format(channelUniqueId))
         channelPath = 'data/tiktok/' + channelUniqueId
 
-        if not os.path.isdir(channelPath):
-            Path(channelPath).mkdir(exist_ok=True)
+        
+        Path(channelPath).mkdir(exist_ok=True)
+        try:
             channelDict = self.api.getUser(channelUniqueId)
             channel = TiktokChannel.channelFromChannelDict(channelDict)
             self.session.add(channel)
             self.session.commit()
-        
+        except:
+            pass
         tiktoks = []
         try:
             tiktoks = self.api.byUsername(channelUniqueId, count=count)
@@ -87,3 +93,6 @@ class TikTokHelper():
         self.session.commit()
 
         
+
+helper = TikTokHelper()
+helper.getTrending(10)

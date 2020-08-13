@@ -4,7 +4,7 @@ from sqlalchemy import Column, Integer, String
 
 
 
-engine = create_engine('sqlite:///data/databases/memes2.db', echo=True)
+engine = create_engine('postgresql://postgres:wabbalabba@localhost/youtubebot', echo=True)
 Base = declarative_base(engine)
 
 class TiktokChannel(Base):
@@ -21,7 +21,6 @@ class TiktokChannel(Base):
 
     def channelFromChannelDict(channelDict):
         channel = TiktokChannel()
-
         channel.uniqueId = channelDict['userInfo']['user']['uniqueId']
         channel.nickname = channelDict['userInfo']['user']['nickname']
         channel.followerCount = channelDict['userInfo']['stats']['followerCount']

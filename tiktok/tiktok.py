@@ -4,29 +4,28 @@ from sqlalchemy import Column, Integer, String, ForeignKey
 from tiktokChannel import TiktokChannel
 
 
-engine = create_engine('sqlite:///data/databases/memes2.db', echo=True)
+engine = create_engine('postgresql://postgres:wabbalabba@localhost/youtubebot', echo=True)
 Base = declarative_base(engine)
 
 
 
 class Tiktok(Base):
 
-    __tablename__ = 'tiktok'
+    __tablename__ = 'tiktoks'
 
     id = Column(Integer, primary_key=True)
-    tiktokId = Column(Integer)
-    channelUniqueId = Column(Integer, ForeignKey(TiktokChannel.uniqueId))
+    tiktokId = Column(String)
+    channelUniqueId = Column(String, ForeignKey(TiktokChannel.uniqueId))
     desc = Column(String)
     diggCount = Column(Integer)
     playCount = Column(Integer)
     commentCount = Column(Integer)
-    downloadAddr = Column(String)
     fileLocation = Column(String)
     duration = Column(Integer)
     width = Column(Integer)
     height = Column(Integer)
     songName = Column(String)
-    songId = Column(Integer)
+    songId = Column(String)
 
 
     def tiktokFromTiktokDict(tiktokDict, fileLocation):
@@ -38,7 +37,6 @@ class Tiktok(Base):
         tiktok.playCount = tiktokDict['stats']['playCount']
         tiktok.commentCount = tiktokDict['stats']['commentCount']
         tiktok.shareCount = tiktokDict['stats']['shareCount']
-        tiktok.downloadAddr = tiktokDict['video']['downloadAddr']
         tiktok.fileLocation = fileLocation
         tiktok.duration = tiktokDict['video']['duration']
         tiktok.width = tiktokDict['video']['width']

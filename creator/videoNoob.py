@@ -15,6 +15,7 @@ class VideoNoob(object):
         #TODO Should return youtubeVideo object 
         #TODO Add 'fluff' to make content more human
         #TODO Include channel names in corner along with desc, hashtags, etc 
+        #TODO Rewrite using sqlalchemy 
 
     def __init__(self, dbh):
         self.dbh = dbh
