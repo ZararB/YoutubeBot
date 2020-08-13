@@ -6,6 +6,11 @@ import random
 from exceptions import *
 import os
 import matplotlib.pyplot as plt 
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+
+engine = create_engine('postgresql://postgres:wabbalabba@localhost/youtubebot', echo=True)
+Session = sessionmaker(bind = engine)
 
 class VideoNoob(object):
 
@@ -17,8 +22,8 @@ class VideoNoob(object):
         #TODO Rewrite using sqlalchemy 
         
 
-    def __init__(self, dbh):
-        self.dbh = dbh
+    def __init__(self, ):
+        self.session = Session()
 
     def create_video(self, clip_locations, vid_location, clip_dims, vid_dims=(1080, 1920, 3), template='data/backgrounds/tiktok0.png' ):
         

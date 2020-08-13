@@ -29,16 +29,18 @@ class TikTokHelper():
             
 
             channelPath = 'data/tiktok/' + channelUniqueId
-            Path(channelPath).mkdir(exist_ok=True)
-            try:
-                # Tries to get User and enter into database. 
-                # Exception is raised if channel already in db
-                channelDict = self.api.getUser(channelUniqueId)
-                channel = TiktokChannel.channelFromChannelDict(channelDict)
-                self.session.add(channel)
-                self.session.commit()
-            except:
-                pass
+            
+            if not os.path.isdir(channelPath):
+                
+                Path(channelPath).mkdir(exist_ok=True)
+                # Add channel to database if entry doesn't exist
+                q = self.session.query(TiktokChannel).filter(TiktokChannel.uniqueId == channelUniqueId).all()
+                if len(q) == 0:
+                    channelDict = self.api.getUser(channelUniqueId)
+                    channel = TiktokChannel.channelFromChannelDict(channelDict)
+                    self.session.add(channel)
+                    self.session.commit()
+            
 
             downloadLocation = channelPath + '/' + tiktokId + '.mp4'
             
@@ -60,17 +62,16 @@ class TikTokHelper():
         print('Getting user {}...'.format(channelUniqueId))
         channelPath = 'data/tiktok/' + channelUniqueId
 
-        
-        Path(channelPath).mkdir(exist_ok=True)
-        try:
-            # Tries to get User and enter into database. 
-            # Exception is raised if channel already in db
-            channelDict = self.api.getUser(channelUniqueId)
-            channel = TiktokChannel.channelFromChannelDict(channelDict)
-            self.session.add(channel)
-            self.session.commit()
-        except:
-            pass
+        if not os.path.isdir(channelPath):
+                
+                Path(channelPath).mkdir(exist_ok=True)
+                # Add channel to database if entry doesn't exist
+                q = self.session.query(TiktokChannel).filter(TiktokChannel.uniqueId == channelUniqueId).all()
+                if len(q) == 0:
+                    channelDict = self.api.getUser(channelUniqueId)
+                    channel = TiktokChannel.channelFromChannelDict(channelDict)
+                    self.session.add(channel)
+                    self.session.commit()
         tiktoks = []
         try:
             tiktoks = self.api.byUsername(channelUniqueId, count=count)
