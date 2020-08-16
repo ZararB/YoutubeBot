@@ -68,16 +68,13 @@ class Agent(object):
         '''
         # Generate content randomly 
         #TODO Modify probabilities of generating different types of content based on views 
-
         compilation_prob = 0.3
         user_compilation_prob = 1 - compilation_prob
-
         if np.random.rand() < compilation_prob:
             return self.vidNoob.generateTikTokCompilation(num_clips=num_clips)
         else:
             user = random.sample(TikTok_mainStreamChannels, 1)[0]
             return self.vidNoob.generateTikTokCompilation(user=user, num_clips=num_clips)
-
         '''
         return self.vidNoob.generateTikTokBattle('charlidamelio', 'lorengray')
         
@@ -94,5 +91,3 @@ class Agent(object):
 
     def agentSell(self, youtubeVideo):
         pass
-
-
