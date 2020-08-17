@@ -1,17 +1,17 @@
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String, ForeignKey
-from tiktokChannel import TiktokChannel
+from tiktok.tiktokChannel import TiktokChannel
+from youtube.youtubeChannel import YoutubeChannel
 
-
-engine = create_engine('sqlite:///data/databases/memes2.db', echo=True)
+engine = create_engine('postgresql://postgres:wabbalabba@localhost/youtubebot', echo=True)
 Base = declarative_base(engine)
 
 
 
 class YoutubeVideo(Base):
 
-    __tablename__ = 'videos'
+    __tablename__ = 'youtubeVideo'
 
     id = Column(Integer, primary_key=True)
     channelId = Column(Integer, ForeignKey(YoutubeChannel.id))

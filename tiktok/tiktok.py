@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String, ForeignKey
-from tiktokChannel import TiktokChannel
+from tiktok.tiktokChannel import TiktokChannel
 
 
 engine = create_engine('postgresql://postgres:wabbalabba@localhost/youtubebot', echo=True)
