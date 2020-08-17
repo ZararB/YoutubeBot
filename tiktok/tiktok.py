@@ -29,6 +29,7 @@ class Tiktok(Base):
 
 
     def tiktokFromTiktokDict(tiktokDict, fileLocation):
+        
         tiktok = Tiktok()
         tiktok.tiktokId = tiktokDict['id']
         tiktok.channelUniqueId = tiktokDict['author']['uniqueId'] 
