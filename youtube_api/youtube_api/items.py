@@ -15,3 +15,12 @@ class YoutubeVideo(scrapy.Item):
     timestamp = scrapy.Field()
 
     pass
+
+class YoutubeSearchItem(scrapy.Item):
+    title = scrapy.Field()
+    url = scrapy.Field()
+    channel_name = scrapy.Field()
+    channel_url = scrapy.Field()
+    description = scrapy.Field()
+    views = scrapy.Field()
+    pass

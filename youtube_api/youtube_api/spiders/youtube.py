@@ -29,9 +29,9 @@ def find_value(html, key, separator='"'):
 def extract_channels(data):
     #TODO check what happens when there's no data - is it because youtube's antispam?
     for channel in search_dict(data, 'gridVideoRenderer'):
-        item = YoutubeVideo()
+it        item = YoutubeVideo()
         item['url'] = channel['videoId']
-        item['title'] = channel['title']['simpleText']
+        item['title'] = channel['title']['runs'][0]['text']
         item['thumbnail'] = channel['thumbnail']['thumbnails'][0]
         item['views'] = channel['viewCountText']['simpleText']
         yield item
@@ -43,7 +43,6 @@ class YoutubeSpider(scrapy.Spider):
     start_urls = ['https://www.youtube.com/user/PewDiePie/videos']
 
     def parse(self, response):
-        # inspect_response(response, self)
         is_html = response.xpath("//script").get()
         print(response.body)
         if is_html is not None:
