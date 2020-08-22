@@ -1,0 +1,46 @@
+CREATE TABLE tiktoks (
+	id SERIAL NOT NULL, 
+	"tiktokId" VARCHAR, 
+	"channelUniqueId" VARCHAR, 
+	"desc" VARCHAR, 
+	"diggCount" INTEGER, 
+	"playCount" INTEGER, 
+	"commentCount" INTEGER, 
+	"fileLocation" VARCHAR, 
+	duration INTEGER, 
+	width INTEGER, 
+	height INTEGER, 
+	"songName" VARCHAR, 
+	"songId" VARCHAR, 
+	PRIMARY KEY (id), 
+	FOREIGN KEY("channelUniqueId") REFERENCES "tiktokChannel" ("uniqueId")
+);
+CREATE TABLE "tiktokChannel" (
+	"uniqueId" VARCHAR NOT NULL, 
+	nickname VARCHAR, 
+	"followerCount" INTEGER, 
+	"followingCount" INTEGER, 
+	"heartCount" INTEGER, 
+	"videoCount" INTEGER, 
+	PRIMARY KEY ("uniqueId")
+);
+
+CREATE TABLE "youtubeVideo" (
+	id SERIAL NOT NULL, 
+	"channelId" INTEGER, 
+	title VARCHAR, 
+	"desc" VARCHAR, 
+	"thumbnailFileLocation" VARCHAR, 
+	PRIMARY KEY (id), 
+	FOREIGN KEY("channelId") REFERENCES "youtubeChannel" (id)
+);
+
+CREATE TABLE "youtubeChannel" (
+	id SERIAL NOT NULL, 
+	nickname VARCHAR, 
+	"uniqueId" VARCHAR, 
+	"followerCount" INTEGER, 
+	"contentCount" INTEGER, 
+	"averageViewCount" INTEGER, 
+	PRIMARY KEY (id)
+);

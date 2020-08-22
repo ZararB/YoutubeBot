@@ -1,6 +1,12 @@
-data/
+venv
+auth
+*.pyc
+tmp
 __pycache__
-venv/
-.vscode/
+youtubebot.code-workspace
+data
+.vscode
+*.mp3
 *.mp4
-tmp/
+geckodriver.log
+*.swp
