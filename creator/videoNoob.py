@@ -8,8 +8,8 @@ import os
 import matplotlib.pyplot as plt 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-
-engine = create_engine('postgresql://postgres:wabbalabba@localhost/youtubebot', echo=True)
+from tiktok.tiktok import Tiktok
+engine = create_engine('postgresql://postgres:wabbalabba@localhost/youtubebot-dev', echo=True)
 Session = sessionmaker(bind = engine)
 
 class VideoNoob(object):
@@ -100,7 +100,7 @@ class VideoNoob(object):
         num_clips = min(len(tiktoks), num_clips)
         
         if num_clips == 0:
-            raise ContentException
+            raise Exception
         
         randomTikToks = random.sample(tiktoks, num_clips)
 

@@ -1,8 +1,8 @@
 from TikTokApi import TikTokApi
 from pathlib import Path
 import os 
-from tiktok import Tiktok
-from tiktokChannel import TiktokChannel
+from tiktok.tiktok import Tiktok
+from tiktok.tiktokChannel import TiktokChannel
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
@@ -73,13 +73,7 @@ class TikTokHelper():
                     self.session.add(channel)
                     self.session.commit()
                     
-        tiktoks = []
-
-        try:
-            tiktoks = self.api.byUsername(channelUniqueId, count=count)
-        except Exception:
-            print(Exception)
-
+        tiktoks = self.api.byUsername(channelUniqueId, count=count)
 
         for tiktokDict in tiktoks:
             
@@ -96,8 +90,3 @@ class TikTokHelper():
 
 
         self.session.commit()
-
-        
-
-helper = TikTokHelper()
-helper.getTrending(10)
