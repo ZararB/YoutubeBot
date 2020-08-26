@@ -3,7 +3,6 @@ from moviepy.editor import *
 import cv2
 import numpy as np
 import random 
-from exceptions import *
 import os
 import matplotlib.pyplot as plt 
 from sqlalchemy import create_engine
@@ -184,7 +183,8 @@ class VideoNoob(object):
 
         final_clip = CompositeVideoClip([background_clip, leftClip, rightClip])
         final_clip.write_videofile('Battletest.mp4')
-        content_clip.close()
+        leftClip.close()
+        rightClip.close()
         background_clip.close()
         final_clip.close()
 

@@ -1,7 +1,6 @@
 from tiktok import TikTokHelper
-from youtube.youtubeChannel import YoutubeChannel
-from youtube.youtubeVideo import YoutubeVideo
 
-helper = TikTokHelper.TikTokHelper()
+if __name__ == '__main__':
+    helper = TikTokHelper.TikTokHelper()
 
-helper.getTrending(10)
+    helper.getTrending(10)

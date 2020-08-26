@@ -1,16 +1,9 @@
-from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
+from database.models.base import Base
 from sqlalchemy import Column, Integer, String
 
 
-
-engine = create_engine('postgresql://postgres:wabbalabba@localhost/youtubebot', echo=True)
-Base = declarative_base(engine)
-
 class TiktokChannel(Base):
-
     __tablename__ = 'tiktokChannel'
-    
 
     uniqueId = Column(String, primary_key=True)
     nickname = Column(String)
@@ -20,6 +13,7 @@ class TiktokChannel(Base):
     videoCount = Column(Integer)
 
     def channelFromChannelDict(channelDict):
+        # TODO naming convention standardization?
         channel = TiktokChannel()
         channel.uniqueId = channelDict['userInfo']['user']['uniqueId']
         channel.nickname = channelDict['userInfo']['user']['nickname']
@@ -27,7 +21,5 @@ class TiktokChannel(Base):
         channel.followingCount = channelDict['userInfo']['stats']['followingCount']
         channel.heartCount = channelDict['userInfo']['stats']['heartCount']
         channel.videoCount = channelDict['userInfo']['stats']['videoCount']
-        
-        return channel
 
-Base.metadata.create_all(engine)
+        return channel
