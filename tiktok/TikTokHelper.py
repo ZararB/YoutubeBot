@@ -63,9 +63,14 @@ class TikTokHelper():
                     channel = TiktokChannel.channelFromChannelDict(channelDict)
                     self.session.add(channel)
                     self.session.commit()
-                    
-        tiktoks = self.api.byUsername(channelUniqueId, count=count)
 
+
+        tiktoks = []
+
+        try:   
+            tiktoks = self.api.byUsername(channelUniqueId, count=count)
+        except Exception:
+            pass
         for tiktokDict in tiktoks:
             
             downloadLocation = channelPath + '/' + tiktokDict['id'] + '.mp4'     

@@ -7,9 +7,9 @@ import os
 import matplotlib.pyplot as plt 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from tiktok.tiktok import Tiktok
-engine = create_engine('postgresql://postgres:wabbalabba@localhost/youtubebot-dev', echo=True)
-Session = sessionmaker(bind = engine)
+from database.models.tiktok import Tiktok
+from database.models.tiktokChannel import TiktokChannel
+from database.connection import Session
 
 class VideoNoob(object):
 
@@ -21,10 +21,10 @@ class VideoNoob(object):
         #TODO Rewrite using sqlalchemy 
         
 
-    def __init__(self, ):
+    def __init__(self):
         self.session = Session()
 
-    def create_video(self, clip_locations, vid_location, clip_dims, vid_dims=(1080, 1920, 3), template='data/backgrounds/tiktok0.png' ):
+    def createVideoFromClipLocations(self, clip_locations, vid_location, clip_dims, vid_dims=(1080, 1920, 3), template='data/backgrounds/tiktok0.png' ):
         
         clips = []
 
@@ -51,13 +51,12 @@ class VideoNoob(object):
         background_clip.close()
         final_clip.close()
 
-    def generateTikTokCompilation(self, user=None, num_clips=10, width=720,  height=1280):
+    def generateTikTokCompilation(self, user=None, num_clips=10, width=576,  height=1024):
 
         if user is not None:
             title = ''
             desc = ''
-            cursor = self.dbh.conn.execute('SELECT * FROM tiktoks WHERE username = ? AND height = ? AND width = ?', (user, height, width))
-
+            q = self.session.query(Tiktok).filter(Tiktok.channelUniqueId == user).filter(Tiktok.width == width).filter(Tiktok.height == height)
             compilation_dir = 'data/videos/tiktokofficial/{}_compilations/'.format(user) 
 
             try:
@@ -77,7 +76,7 @@ class VideoNoob(object):
         else:
             title = ''
             desc = ''
-            cursor = self.dbh.conn.execute('SELECT * FROM tiktoks WHERE height = ? AND width = ?', (height, width))
+            q = self.session.query(Tiktok).filter(Tiktok.width == width).filter(Tiktok.height == height)
             compilation_dir = 'data/videos/tiktokofficial/compilations/'
 
             try:
@@ -95,18 +94,17 @@ class VideoNoob(object):
                 else:
                     break
             
-        tiktoks = cursor.fetchall()
+        tiktoks = q.all()
         num_clips = min(len(tiktoks), num_clips)
         
         if num_clips == 0:
             raise Exception
         
-        randomTikToks = random.sample(tiktoks, num_clips)
+        randomTiktoks = random.sample(tiktoks, num_clips)
 
-        clip_locations = [randomTikToks[i][6] for i in range(num_clips)]
+        clip_locations = [randomTiktok.fileLocation for randomTiktok in randomTiktoks]
         
-        # Check if video was made properly
-        success = self.create_video(clip_locations, vid_location, clip_dims=(width, height))
+        success = self.createVideoFromClipLocations(clip_locations, vid_location, clip_dims=(width, height))
 
         #if success:
             #self.dbh.insertVideo(vid_location, title, desc)
@@ -116,8 +114,6 @@ class VideoNoob(object):
         return (vid_location, title, desc)
 
     
-    def generateTikTokUserCompilation(self, user):
-        pass
 
     def generateTikTokBattle(self, user1, user2, numClips=2,  width=720,  height=1280):
         
