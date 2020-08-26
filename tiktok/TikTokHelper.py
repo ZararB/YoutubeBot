@@ -1,8 +1,8 @@
 from TikTokApi import TikTokApi
 from pathlib import Path
 import os 
-from tiktok.tiktok import Tiktok
-from tiktok.tiktokChannel import TiktokChannel
+from tiktok import Tiktok
+from tiktokChannel import TiktokChannel
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
@@ -29,20 +29,23 @@ class TikTokHelper():
             
 
             channelPath = 'data/tiktok/' + channelUniqueId
+            
             if not os.path.isdir(channelPath):
+                
                 Path(channelPath).mkdir(exist_ok=True)
-                try:
+                # Add channel to database if entry doesn't exist
+                q = self.session.query(TiktokChannel).filter(TiktokChannel.uniqueId == channelUniqueId).all()
+                if len(q) == 0:
                     channelDict = self.api.getUser(channelUniqueId)
                     channel = TiktokChannel.channelFromChannelDict(channelDict)
                     self.session.add(channel)
                     self.session.commit()
-                except:
-                    pass
+            
 
             downloadLocation = channelPath + '/' + tiktokId + '.mp4'
             
             if not os.path.isfile(downloadLocation):
-                # Implement logging
+                # If tiktok is not downloaded, download and save in database
                 vid_data = self.api.get_Video_By_TikTok(tiktokDict)
                 out = open(downloadLocation, 'wb')
                 out.write(vid_data)
@@ -59,18 +62,17 @@ class TikTokHelper():
         print('Getting user {}...'.format(channelUniqueId))
         channelPath = 'data/tiktok/' + channelUniqueId
 
-        
         if not os.path.isdir(channelPath):
-            Path(channelPath).mkdir(exist_ok=True)
-            try:
-                channelDict = self.api.getUser(channelUniqueId)
-                channel = TiktokChannel.channelFromChannelDict(channelDict)
-                self.session.add(channel)
-                self.session.commit()
-            except:
-                pass
-
-
+                
+                Path(channelPath).mkdir(exist_ok=True)
+                # Add channel to database if entry doesn't exist
+                q = self.session.query(TiktokChannel).filter(TiktokChannel.uniqueId == channelUniqueId).all()
+                if len(q) == 0:
+                    channelDict = self.api.getUser(channelUniqueId)
+                    channel = TiktokChannel.channelFromChannelDict(channelDict)
+                    self.session.add(channel)
+                    self.session.commit()
+                    
         tiktoks = []
 
         try:
@@ -80,21 +82,22 @@ class TikTokHelper():
 
 
         for tiktokDict in tiktoks:
-            downloadLocation = channelPath + '/' + tiktokDict['id'] + '.mp4'
             
-            # Skip if already downloaded
+            downloadLocation = channelPath + '/' + tiktokDict['id'] + '.mp4'     
 
             if not os.path.isfile(downloadLocation):
+                # If tiktok is not downloaded, download and save in database
                 vid_data = self.api.get_Video_By_TikTok(tiktokDict)
                 out = open(downloadLocation, 'wb')
                 out.write(vid_data)
                 out.close()
                 tiktok = Tiktok.tiktokFromTiktokDict(tiktokDict, downloadLocation)
                 self.session.add(tiktok)
-            else:
-                # Log or print that tiktok is already downloaded 
-                pass 
+
 
         self.session.commit()
 
-    
+        
+
+helper = TikTokHelper()
+helper.getTrending(10)
