@@ -1,5 +1,5 @@
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, scoped_session
 
 # dev database connection
 dbuser = 'postgres'
@@ -16,6 +16,7 @@ dbname = 'youtubebot-dev'
 
 engine = create_engine('postgresql://%s:%s@%s:5432/%s'
                        % (dbuser, dbpassword, dbserver, dbname))
-Session = sessionmaker(autocommit=False,
+session_factory = sessionmaker(autocommit=False,
                        autoflush=False,
                        bind=engine)
+Session = scoped_session(session_factory)
