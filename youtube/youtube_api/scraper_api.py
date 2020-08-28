@@ -21,7 +21,7 @@ def search_youtube(search_term):
     pass
 
 
-def scrape_channel(channel_urls):
+def scrape_channels(channel_urls):
     crawler_settings = Settings()
     crawler_settings.set('DOWNLOAD_DELAY', 1)
     crawler_settings.set('ITEM_PIPELINES',
