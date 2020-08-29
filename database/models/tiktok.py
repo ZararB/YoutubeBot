@@ -1,16 +1,9 @@
-from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
+from database.models.base import Base
 from sqlalchemy import Column, Integer, String, ForeignKey
-from tiktok.tiktokChannel import TiktokChannel
-
-
-engine = create_engine('postgresql://postgres:wabbalabba@localhost/youtubebot', echo=True)
-Base = declarative_base(engine)
-
+from database.models.tiktokChannel import TiktokChannel
 
 
 class Tiktok(Base):
-
     __tablename__ = 'tiktoks'
 
     id = Column(Integer, primary_key=True)
@@ -27,12 +20,10 @@ class Tiktok(Base):
     songName = Column(String)
     songId = Column(String)
 
-
     def tiktokFromTiktokDict(tiktokDict, fileLocation):
-        
         tiktok = Tiktok()
         tiktok.tiktokId = tiktokDict['id']
-        tiktok.channelUniqueId = tiktokDict['author']['uniqueId'] 
+        tiktok.channelUniqueId = tiktokDict['author']['uniqueId']
         tiktok.desc = tiktokDict['desc']
         tiktok.diggCount = tiktokDict['stats']['diggCount']
         tiktok.playCount = tiktokDict['stats']['playCount']
@@ -46,16 +37,3 @@ class Tiktok(Base):
         tiktok.songId = tiktokDict['music']['id']
 
         return tiktok
-
-        
-
-
-
-
-
-Base.metadata.create_all(engine)
-
-
-
-
-

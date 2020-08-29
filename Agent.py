@@ -1,22 +1,19 @@
-from DbHelper import DbHelper
-from TikTokHelper import TikTokHelper
-from videoNoob import VideoNoob
-import random 
-from youtubeHelper import youtubeHelper
+from tiktok.TikTokHelper import TikTokHelper
+from creator.videoNoob import VideoNoob
+
 
 import numpy as np
 
 class Agent(object):
 
-    global TikTok_mainStreamChannels
+    
     TikTok_mainStreamChannels = [  'lorengray', 'zachking', 'babyariel', 'charlidamelio', 'addisonre']
     channels = ['tiktokofficial']
 
 
     def __init__(self):
-        self.dbh = DbHelper('data/databases/memes.db')
-        self.tkh = TikTokHelper(self.dbh)
-        self.vidNoob = VideoNoob(self.dbh)
+        self.tkh = TikTokHelper()
+        self.vidNoob = VideoNoob()
         self.youtubeHelper = youtubeHelper()
         
 
