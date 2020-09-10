@@ -1,3 +1,7 @@
+from youtube.youtube_api.scraper_api import search_youtube
+from youtube.youtube_api.scraper_api import scrape_channels
+from database.youtube import get_unscraped_channel_urls
+
 from tiktok import TikTokHelper
 from creator.videoNoob import VideoNoob
 if __name__ == '__main__':
@@ -19,4 +23,5 @@ if __name__ == '__main__':
 
     vNoob.generateTikTokCompilation('charlidamelio')
 
-
+    # youtube api
+    scrape_channels(get_unscraped_channel_urls(limit=1))
