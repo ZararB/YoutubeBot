@@ -24,7 +24,7 @@ class VideoNoob(object):
     def __init__(self):
         self.session = Session()
 
-    def createVideoFromClipLocations(self, clip_locations, vid_location, clip_dims, vid_dims=(1080, 1920, 3), template='data/backgrounds/tiktok0.png' ):
+    def createVideoFromClipLocations(self, clip_locations, vid_location, clip_dims, vid_dims=(1080, 1920, 3), template='data/backgrounds/tiktok0.png'):
         
         clips = []
 
@@ -144,7 +144,7 @@ class VideoNoob(object):
 
 
     
-    def createBattleVideo(self, leftClips, rightClips, background='data/backgrounds/tiktok0.png'):
+    def createBattleVideoFromClipLocations(self, leftClips, rightClips, background='data/backgrounds/tiktok0.png'):
         clips1 = []
         clips2 = []
 
