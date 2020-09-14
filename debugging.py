@@ -21,7 +21,7 @@ if __name__ == '__main__':
     Debugging VideoNoob
     '''
 
-    vNoob.generateTikTokCompilation('charlidamelio')
+    #vNoob.generateTikTokCompilation('charlidamelio')
 
     # youtube api
     scrape_channels(get_unscraped_channel_urls(limit=1))
